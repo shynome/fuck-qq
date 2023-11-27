@@ -7,4 +7,5 @@ RUN wget https://dldir1.qq.com/qqfile/qq/QQNT/fd2e886e/linuxqq_3.2.2-18394_amd64
   apt install -y -f && \
   rm linuxqq_3.2.2-18394_amd64.deb && \
   apt-get clean
+COPY fuck-qq /opt/fuck-qq
 USER 1000
