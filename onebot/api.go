@@ -83,14 +83,14 @@ func initAPI(g *echo.Group) {
 					for _, pair := range m.Data {
 						switch {
 						case pair.K == "qq" && pair.V == "all":
-							atAll(ctx)
+							try.To(atAll(ctx))
 						}
 					}
 				case "text":
 					for _, pair := range m.Data {
 						switch {
 						case pair.K == "text":
-							write(ctx, "text/plain", []byte(pair.V))
+							try.To(write(ctx, "text/plain", []byte(pair.V)))
 						}
 					}
 				case "image":
@@ -102,14 +102,16 @@ func initAPI(g *echo.Group) {
 							if item == nil {
 								msg := fmt.Sprintf("get img failed, link: %s", img)
 								logger.Debug(msg)
+								img := fmt.Sprintf("[img=%s]", img)
+								try.To(write(ctx, "text/plain", []byte(img)))
 								continue
 							}
-							write(ctx, "image/png", item.Value())
+							try.To(write(ctx, "image/png", item.Value()))
 						}
 					}
 				}
 			}
-			send(ctx)
+			try.To(send(ctx))
 		}
 		logger.Debug("发送完成")
 		return c.JSON(http.StatusOK, map[string]any{
@@ -149,9 +151,9 @@ func atAll(ctx context.Context) error {
 		return err
 	}
 	var buf bytes.Buffer
-	xclip := exec.CommandContext(ctx, "xclip", "-o")
-	xclip.Stdout = &buf
-	if err := xclip.Run(); err != nil {
+	clipboard := exec.CommandContext(ctx, "copyq", "clipboard")
+	clipboard.Stdout = &buf
+	if err := clipboard.Run(); err != nil {
 		return err
 	}
 	if content := buf.String(); !strings.HasSuffix(content, "@全体成员 ") {
@@ -161,12 +163,12 @@ func atAll(ctx context.Context) error {
 }
 
 func write(ctx context.Context, mime string, buf []byte) error {
-	xclip := exec.CommandContext(ctx, "xclip", "-selection", "clipboard", "-t", mime)
-	xclip.Stdin = bytes.NewBuffer(buf)
-	if err := xclip.Run(); err != nil {
+	copy := exec.CommandContext(ctx, "copyq", "copy", mime, "-")
+	copy.Stdin = bytes.NewBuffer(buf)
+	if err := copy.Run(); err != nil {
 		return err
 	}
-	paste := exec.CommandContext(ctx, "xdotool", "getactivewindow", "key", "ctrl+v")
+	paste := exec.CommandContext(ctx, "copyq", "paste")
 	if err := paste.Run(); err != nil {
 		return err
 	}
