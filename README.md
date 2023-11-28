@@ -5,7 +5,7 @@
 ## 依赖
 
 ```sh
-apt install xclip wmctrl xdotool
+apt install wmctrl xdotool copyq
 ```
 
 - `wmctrl` 找到对应的 QQ 独立窗口
