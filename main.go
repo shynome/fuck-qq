@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"os/exec"
 
@@ -9,7 +10,16 @@ import (
 	"github.com/shynome/fuck-qq/onebot"
 )
 
+var args struct {
+	addr string
+}
+
+func init() {
+	flag.StringVar(&args.addr, "addr", ":5700", "http server listen addr")
+}
+
 func main() {
+	flag.Parse()
 	if os.Getenv("RUN_COPYQ") != "" {
 		go func() {
 			cmd := exec.Command("copyq")
@@ -21,5 +31,5 @@ func main() {
 	}
 	e := echo.New()
 	onebot.Inject(e)
-	e.Start(":5700")
+	try.To(e.Start(args.addr))
 }
