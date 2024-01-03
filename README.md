@@ -2,6 +2,12 @@
 
 使用 gui automation 工具实现将动态推送. 强阻塞, 一次只能运行一个任务
 
+## 运行
+
+```sh
+docker run --name fuck-qq --restart always -d --shm-size=512m -p 6901:6901 -e VNC_PW=password shynome/fuck-qq:v0.0.6
+```
+
 ## 依赖
 
 ```sh
