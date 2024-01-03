@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.5] - 2024-01-04
+
+- 优化: 在 Docker 中启动时会附带启动 copyq
+- 增加: 命令行参数 addr
+
 ## [0.0.4] - 2023-11-27
 
 - fix: Dockerfile
