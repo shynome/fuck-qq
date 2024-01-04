@@ -5,7 +5,21 @@
 ## 运行
 
 ```sh
-docker run --name fuck-qq --restart always -d --shm-size=512m -p 6901:6901 -e VNC_PW=password shynome/fuck-qq:v0.0.6
+docker run \
+  --name fuck-qq \
+  --restart always \
+  -d \
+  --shm-size=512m \
+  -p 6901:6901 \
+  -p 5700:5700 \
+ -e VNC_PW=password \
+ shynome/fuck-qq:v0.0.6
+```
+
+## 测试是否正常运行
+
+```sh
+curl 'http://127.0.0.1:5700/onebot/send_group_msg?group_id=qq群号&message=hello'
 ```
 
 ## 依赖
