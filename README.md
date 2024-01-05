@@ -9,7 +9,7 @@ docker run \
   --name fuck-qq \
   --restart always \
   -d \
-  --shm-size=512m \
+  --shm-size=2g \
   -p 6901:6901 \
   -p 5700:5700 \
  -e VNC_PW=password \
