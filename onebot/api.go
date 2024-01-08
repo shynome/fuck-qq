@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"log/slog"
 	"net/http"
 	"os/exec"
@@ -52,12 +53,15 @@ var fileCache = ttlcache.New[string, []byte](
 
 func initAPI(g *echo.Group) {
 	g.Any("/send_group_msg", func(c echo.Context) (err error) {
-		defer err0.Then(&err, nil, nil)
+		var params SendGroupMsgParams
+		defer err0.Then(&err, nil, func() {
+			slog.With("params", params).Error("群消息发送失败", "err", err)
+			log.Println()
+		})
 
 		rw.Lock()
 		defer rw.Unlock()
 
-		var params SendGroupMsgParams
 		try.To(c.Bind(&params))
 		ctx := c.Request().Context()
 
@@ -83,7 +87,7 @@ func initAPI(g *echo.Group) {
 					for _, pair := range m.Data {
 						switch {
 						case pair.K == "qq" && pair.V == "all":
-							try.To(atAll(ctx))
+							tryAtAll(ctx)
 						}
 					}
 				case "text":
@@ -136,6 +140,18 @@ func clear(ctx context.Context) error {
 	return nil
 }
 
+func tryAtAll(ctx context.Context) (err error) {
+	for _, i := range []int{0, 1} {
+		if i > 0 {
+			clear(ctx)
+		}
+		if err = atAll(ctx); err != nil {
+			continue
+		}
+		return nil
+	}
+	return nil
+}
 func atAll(ctx context.Context) error {
 	if err := exec.CommandContext(ctx, "xdotool", "type", "--delay", "100", "@").Run(); err != nil {
 		return err
