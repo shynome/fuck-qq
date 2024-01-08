@@ -13,7 +13,7 @@ docker run \
   -p 6901:6901 \
   -p 5700:5700 \
  -e VNC_PW=password \
- shynome/fuck-qq:v0.0.6
+ shynome/fuck-qq:v0.0.7
 ```
 
 ## 测试是否正常运行
