@@ -111,7 +111,7 @@ func initAPI(g *echo.Group) {
 					}
 				}
 			}
-			if c.QueryParam("check") != "" {
+			if c.QueryParam("check") == "" {
 				try.To(send(ctx))
 			}
 		}
