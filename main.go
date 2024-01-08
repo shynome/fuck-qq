@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 	"os/exec"
 
@@ -26,6 +27,7 @@ func main() {
 			cmd.Stderr = os.Stderr
 			cmd.Stdout = os.Stdout
 			try.To(cmd.Start())
+			log.Println("copyq is running")
 			try.To(cmd.Wait())
 		}()
 	}
