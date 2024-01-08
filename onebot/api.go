@@ -111,7 +111,9 @@ func initAPI(g *echo.Group) {
 					}
 				}
 			}
-			try.To(send(ctx))
+			if c.QueryParam("check") != "" {
+				try.To(send(ctx))
+			}
 		}
 		logger.Debug("发送完成")
 		return c.JSON(http.StatusOK, map[string]any{
